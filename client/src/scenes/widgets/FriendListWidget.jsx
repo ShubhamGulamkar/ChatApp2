@@ -4,6 +4,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setFriends } from "state"; 
+import axios from 'axios';
 
 const FriendListWidget = ({userId})=>{
     const dispatch = useDispatch();
@@ -12,17 +13,33 @@ const FriendListWidget = ({userId})=>{
     const friends = useSelector((state)=>state.user.friends);
 
 
-    const getFriends = async()=>{
-        const response = await fetch(
-            `https://chatapp-xa59.onrender.com/users/${userId}/friends`,
-            {
-                method:"GET",
-                headers:{Authorization : `Bearer ${token}`},
-            }
-        );
-        const data = await response.json();
-        console.log({data})
-        dispatch(setFriends({friends:data}));
+    // const getFriends = async()=>{
+    //     const response = await fetch(
+    //         `https://chatapp-xa59.onrender.com/users/${userId}/friends`,
+    //         {
+    //             method:"GET",
+    //             headers:{Authorization : `Bearer ${token}`},
+    //         }
+    //     );
+    //     const data = await response.json();
+    //     console.log({data})
+    //     dispatch(setFriends({friends:data}));
+    // };
+
+    const getFriends = async (userId, token, dispatch) => {
+      try {
+        const response = await axios.get(`https://chatapp-xa59.onrender.com/users/${userId}/friends`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+    
+        const data = response.data;
+        console.log({ data });
+        dispatch(setFriends({ friends: data }));
+      } catch (error) {
+        // Handle any error that occurs during the API request
+        console.error('Error fetching friends data:', error);
+        // You might want to show an error message to the user or handle it appropriately
+      }
     };
 
     

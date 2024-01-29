@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { setFriends } from "state";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
+import axios from 'axios';
 
 const Friend=({friendId,name,subtitle,userPicturePath})=>{
   const dispatch = useDispatch();
@@ -20,19 +21,41 @@ const Friend=({friendId,name,subtitle,userPicturePath})=>{
   const medium = palette.neutral.medium;
 
   const isFriend = Array.isArray(friends) && friends.find((friend) => friend._id === friendId);
-  const patchFriend=async () =>{
-    const response=await fetch(
+//   const patchFriend=async () =>{
+//     const response=await fetch(
+//         `https://chatapp-xa59.onrender.com/users/${_id}/${friendId}`,
+//         {
+//             method:"PATCH",
+//             headers:{
+//                 Authorization:`Bearer ${token}`,
+//                 "Content-Type":"application/json",
+//             }
+//         }
+//     );
+//     const data = await response.json();
+//     dispatch(setFriends({friends:data}))
+//   };
+
+const patchFriend = async (_id, friendId, token, dispatch) => {
+    try {
+      const response = await axios.patch(
         `https://chatapp-xa59.onrender.com/users/${_id}/${friendId}`,
+        null,
         {
-            method:"PATCH",
-            headers:{
-                Authorization:`Bearer ${token}`,
-                "Content-Type":"application/json",
-            }
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
-    );
-    const data = await response.json();
-    dispatch(setFriends({friends:data}))
+      );
+  
+      const data = response.data;
+      dispatch(setFriends({ friends: data }));
+    } catch (error) {
+      // Handle any error that occurs during the API request
+      console.error('Error updating friend:', error);
+      // You might want to show an error message to the user or handle it appropriately
+    }
   };
 
 return(

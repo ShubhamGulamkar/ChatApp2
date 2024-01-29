@@ -49,24 +49,49 @@ const Form = () => {
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
-  const register = async (values, onSubmitProps) => {
-    // This allows us to send form info with an image
-    const formData = new FormData();
-    for (let value in values) {
-      formData.append(value, values[value]);
-    }
-    formData.append("picturePath", values.picture.name);
+  // const register = async (values, onSubmitProps) => {
+  //   // This allows us to send form info with an image
+  //   const formData = new FormData();
+  //   for (let value in values) {
+  //     formData.append(value, values[value]);
+  //   }
+  //   formData.append("picturePath", values.picture.name);
 
-    const savedUserResponse = await fetch("https://chatapp-xa59.onrender.com/auth/register", {
-      method: "POST",
-      body: formData,
-    });
-    const savedUser = await savedUserResponse.json();
-    console.log({savedUser})
-    onSubmitProps.resetForm();
+  //   const savedUserResponse = await fetch("https://chatapp-xa59.onrender.com/auth/register", {
+  //     method: "POST",
+  //     body: formData,
+  //   });
+  //   const savedUser = await savedUserResponse.json();
+  //   console.log({savedUser})
+  //   onSubmitProps.resetForm();
 
-    if (savedUser) {
-      setPageType("login");
+  //   if (savedUser) {
+  //     setPageType("login");
+  //   }
+  // };
+
+  const register = async (values, onSubmitProps, setPageType) => {
+    try {
+      const formData = new FormData();
+      for (let value in values) {
+        formData.append(value, values[value]);
+      }
+      formData.append("picturePath", values.picture.name);
+  
+      const response = await axios.post("https://chatapp-xa59.onrender.com/auth/register", formData);
+  
+      const savedUser = response.data;
+      console.log({ savedUser });
+  
+      onSubmitProps.resetForm();
+  
+      if (savedUser) {
+        setPageType("login");
+      }
+    } catch (error) {
+      // Handle any error that occurs during the API request
+      console.error('Error during registration:', error);
+      // You might want to show an error message to the user or handle it appropriately
     }
   };
 

@@ -24,6 +24,7 @@ import {
   import { useState } from "react";
   import { useDispatch, useSelector } from "react-redux";
   import { setPosts } from "state";
+  import axios from 'axios';
 
   const MyPostWidget =({picturePath}) =>{
     const dispatch = useDispatch();
@@ -37,26 +38,53 @@ import {
     const mediumMain = palette.neutral.mediumMain;
     const medium = palette.neutral.medium;
 
-    const handlePost = async()=>{
-        const formData = new FormData();
-        formData.append("userId",_id);
-        formData.append("description",post);
-        if(image){
-            formData.append("picture",image);
-            formData.append("picturePath",image.name);
-        }
+    // const handlePost = async()=>{
+    //     const formData = new FormData();
+    //     formData.append("userId",_id);
+    //     formData.append("description",post);
+    //     if(image){
+    //         formData.append("picture",image);
+    //         formData.append("picturePath",image.name);
+    //     }
 
-        const response = await fetch(`https://chatapp-xa59.onrender.com/posts`,{
-            method: "POST",
-            headers:{Authorization:`Bearer ${token}`},
-            body:formData,
-        })
-        const posts = await response.json();
-        console.log({posts})
-        dispatch(setPosts({posts}));
+    //     const response = await fetch(`https://chatapp-xa59.onrender.com/posts`,{
+    //         method: "POST",
+    //         headers:{Authorization:`Bearer ${token}`},
+    //         body:formData,
+    //     })
+    //     const posts = await response.json();
+    //     console.log({posts})
+    //     dispatch(setPosts({posts}));
+    //     setImage(null);
+    //     setPost("")
+    // }
+
+    const handlePost = async (_id, post, image, token, dispatch, setImage, setPost) => {
+      try {
+        const formData = new FormData();
+        formData.append("userId", _id);
+        formData.append("description", post);
+        
+        if (image) {
+          formData.append("picture", image);
+          formData.append("picturePath", image.name);
+        }
+    
+        const response = await axios.post("https://chatapp-xa59.onrender.com/posts", formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+    
+        const posts = response.data;
+        console.log({ posts });
+        dispatch(setPosts({ posts }));
         setImage(null);
-        setPost("")
-    }
+        setPost("");
+      } catch (error) {
+        // Handle any error that occurs during the API request
+        console.error('Error posting data:', error);
+        // You might want to show an error message to the user or handle it appropriately
+      }
+    };
 
     return (
         <WidgetWrapper p="1rem">

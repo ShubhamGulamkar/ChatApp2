@@ -12,6 +12,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
+import axios from 'axios';
 
 const PostWidget =({
     postId,
@@ -37,17 +38,38 @@ const PostWidget =({
   const main = palette.neutral.main;
   const primary = palette.primary.main;
 
-  const patchLike = async () =>{
-    const response = await fetch(`https://chatapp-xa59.onrender.com/posts/${postId}/like`,{
-        method:"PATCH",
-        headers:{
-            Authorization:`Bearer ${token}`,
-            "Content-Type":"application/json",},
-            body: JSON.stringify({userId:loggedInUserId})
-        })
-        const updatedPost = await response.json();
-        dispatch(setPost({post:updatedPost}));
+  // const patchLike = async () =>{
+  //   const response = await fetch(`https://chatapp-xa59.onrender.com/posts/${postId}/like`,{
+  //       method:"PATCH",
+  //       headers:{
+  //           Authorization:`Bearer ${token}`,
+  //           "Content-Type":"application/json",},
+  //           body: JSON.stringify({userId:loggedInUserId})
+  //       })
+  //       const updatedPost = await response.json();
+  //       dispatch(setPost({post:updatedPost}));
+  //   }
+
+  const patchLike = async (postId, token, loggedInUserId, dispatch) => {
+    try {
+      const response = await axios.patch(`https://chatapp-xa59.onrender.com/posts/${postId}/like`, 
+        { userId: loggedInUserId }, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      const updatedPost = response.data;
+      dispatch(setPost({ post: updatedPost }));
+    } catch (error) {
+      // Handle any error that occurs during the API request
+      console.error('Error updating post like:', error);
+      // You might want to show an error message to the user or handle it appropriately
     }
+  };
 
     return (
         <WidgetWrapper m="2rem 0">

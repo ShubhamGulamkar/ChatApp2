@@ -7,6 +7,7 @@ import FriendListWidget from "scenes/widgets/FriendListWidget";
 import MyPostWidget from "scenes/widgets/MyPostWidget";
 import PostsWidget from "scenes/widgets/PostsWidget";
 import UserWidget from "scenes/widgets/UserWidget";
+import axios from 'axios';
 
 const ProfilePage = () =>{
 
@@ -15,14 +16,29 @@ const ProfilePage = () =>{
     const token = useSelector((state)=>state.token);
     const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
-    const getUser = async ()=>{
-        const response = await fetch(`https://chatapp-xa59.onrender.com/users/${userId}`,{
-            method:"GET",
-            headers:{Authorization: `Bearer ${token}`},
-        })
-        const data = await response.json();
-        setUser(data);
-    }
+    // const getUser = async ()=>{
+    //     const response = await fetch(`https://chatapp-xa59.onrender.com/users/${userId}`,{
+    //         method:"GET",
+    //         headers:{Authorization: `Bearer ${token}`},
+    //     })
+    //     const data = await response.json();
+    //     setUser(data);
+    // }
+
+    const getUser = async (userId, token, setUser) => {
+        try {
+          const response = await axios.get(`https://chatapp-xa59.onrender.com/users/${userId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+      
+          const data = response.data;
+          setUser(data);
+        } catch (error) {
+          // Handle any error that occurs during the API request
+          console.error('Error fetching user data:', error);
+          // You might want to show an error message to the user or handle it appropriately
+        }
+      };
 
     useEffect (()=>{
         getUser();
