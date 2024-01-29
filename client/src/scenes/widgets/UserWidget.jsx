@@ -40,7 +40,7 @@ const UserWidget = ({userId , picturePath}) => {
             headers: { Authorization: `Bearer ${token}` },
           });
       
-          const data = response.data;
+          const data = await response.data;
           console.log({ data });
           setUser(data);
         } catch (error) {
