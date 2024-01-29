@@ -56,7 +56,7 @@ app.use("/users",userRoutes);
 app.use("/posts",postRoutes);
 
 /*Mongoose setup*/
-const PORT = process.env.PORT || 6001;
+const PORT = 6001;
 mongoose.connect(process.env.MONGO_URL,{
     useNewUrlParser: true,
     useUnifiedTopology: true,
