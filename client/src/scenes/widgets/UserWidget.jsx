@@ -22,33 +22,33 @@ const UserWidget = ({userId , picturePath}) => {
     const medium = palette.neutral.medium
     const main = palette.neutral.main;
 
-    // const getUser = async() =>{
-    //     const response = await fetch(`https://chatapp-xa59.onrender.com/users/${userId}`,
-    //     {
-    //         method: "GET",
-    //         headers:{Authorization:`Bearer ${token}`},
+    const getUser = async() =>{
+        const response = await fetch(`https://chatapp-xa59.onrender.com/users/${userId}`,
+        {
+            method: "GET",
+            headers:{Authorization:`Bearer ${token}`},
 
-    //     });
-    //     const data = await response.json();
-    //     console.log({data});
-    //     setUser(data);
-    // }
+        });
+        const data = await response.json();
+        console.log({data});
+        setUser(data);
+    }
 
-    const getUser = async (userId, token, setUser) => {
-        try {
-          const response = await axios.get(`https://chatapp-xa59.onrender.com/users/${userId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+    // const getUser = async (userId, token, setUser) => {
+    //     try {
+    //       const response = await axios.get(`https://chatapp-xa59.onrender.com/users/${userId}`, {
+    //         headers: { Authorization: `Bearer ${token}` },
+    //       });
       
-          const data = await response.data;
-          console.log({ data });
-          setUser(data);
-        } catch (error) {
-          // Handle any error that occurs during the API request
-          console.error('Error fetching user data:', error);
-          // You might want to show an error message to the user or handle it appropriately
-        }
-      };
+    //       const data = await response.data;
+    //       console.log({ data });
+    //       setUser(data);
+    //     } catch (error) {
+    //       // Handle any error that occurs during the API request
+    //       console.error('Error fetching user data:', error);
+    //       // You might want to show an error message to the user or handle it appropriately
+    //     }
+    //   };
 
     useEffect(()=>{
         getUser();
